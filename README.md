@@ -62,6 +62,15 @@ result.connected        # whether the contact network was a single connected com
 
 Every stage is also usable on its own — see `anm/__init__.py` for the full list of exported functions (`load_structure`, `build_contact_graph`, `build_hessian`, `compute_modes`, `compute_msf`, `plot_contact_map`, `generate_report`, etc.).
 
+## Validation study
+
+`validation/multi_protein_validation.ipynb` runs the pipeline against six real, well-characterized structures (crambin, ubiquitin, lysozyme, a ribosomal protein domain, T4 lysozyme, and adenylate kinase) and compares predicted flexibility to experimental B-factors across all of them, including a closer look at adenylate kinase's hinge motion. GitHub renders the notebook with its outputs already in place, so no setup is needed just to read it. To re-run it yourself:
+
+```
+pip install -r validation/requirements.txt
+jupyter notebook validation/multi_protein_validation.ipynb
+```
+
 ## Project structure
 
 ```
@@ -77,6 +86,7 @@ anm/
     pipeline.py           orchestrates every stage above end to end
     __init__.py            public package API
 run_anm.py                 command-line entry point
+validation/                 multi-protein validation notebook (see below)
 tests/                      pytest suite
 ```
 
