@@ -31,3 +31,6 @@ structures/
 *_report.pdf
 anm_report.pdf
 *_mode.gif
+
+# Benchmark caches (downloaded PDB files / RCSB API responses)
+validation/cache/

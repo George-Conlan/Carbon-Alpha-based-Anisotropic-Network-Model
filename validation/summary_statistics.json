@@ -1,0 +1,70 @@
+{
+  "pearson": {
+    "N": 99,
+    "mean": 0.40266866235320564,
+    "median": 0.4083993000284835,
+    "sd": 0.22357698129029002,
+    "min": -0.0509400348557049,
+    "max": 0.8482736462581629,
+    "q25": 0.24201605543279187,
+    "q75": 0.5432784369532758,
+    "iqr": 0.30126238152048396,
+    "ci95_mean_low": 0.35913497415380613,
+    "ci95_mean_high": 0.4464214299253251,
+    "ci95_median_low": 0.3362748544670634,
+    "ci95_median_high": 0.4854651433947894
+  },
+  "spearman": {
+    "N": 99,
+    "mean": 0.5134752115718088,
+    "median": 0.54821079735651,
+    "sd": 0.2014018779253793,
+    "min": -0.1312259315654938,
+    "max": 0.8708417742730625,
+    "q25": 0.41937334189957065,
+    "q75": 0.6495443067937353,
+    "iqr": 0.23017096489416466,
+    "ci95_mean_low": 0.47266703147784933,
+    "ci95_mean_high": 0.5525666444568658,
+    "ci95_median_low": 0.5118416723938478,
+    "ci95_median_high": 0.5916416471964263
+  },
+  "pct_pearson_gt_0": 96.96969696969697,
+  "pct_pearson_ge_0.3": 64.64646464646465,
+  "pct_pearson_ge_0.5": 38.38383838383838,
+  "pct_pearson_ge_0.7": 12.121212121212121,
+  "pct_pearson_p_lt_0.05_and_positive": 87.87878787878788,
+  "n_attempted": 100,
+  "n_valid": 99,
+  "anm_params": {
+    "cutoff": 8.0,
+    "gamma": 1.0,
+    "n_modes": 20,
+    "n_keep": null,
+    "tol": 1e-06
+  },
+  "n_modes_kept": 14,
+  "weakest": {
+    "PDB_ID": "2P3H",
+    "chain": "A",
+    "protein_name": "Uncharacterized CBS domain-containing protein",
+    "pearson_r": -0.0509400348557049
+  },
+  "strongest": {
+    "PDB_ID": "3ZSU",
+    "chain": "A",
+    "protein_name": "TLL2057 PROTEIN",
+    "pearson_r": 0.8482736462581629
+  },
+  "qc": [
+    "no duplicate PDB-chain pairs",
+    "no duplicate PDB IDs",
+    "all 100 benchmark proteins present in results (failures included)",
+    "no NaN/inf in pearson_r, spearman_rho, lead_mode_collectivity of valid proteins",
+    "6 rigid-body modes removed in all 99 valid proteins; 43 have extra near-zero (floppy-terminus) modes, also excluded and flagged in `warnings`"
+  ],
+  "group_kruskal_p": {
+    "fold_class": 0.750935908136691,
+    "functional_class": 0.5096770564191552
+  }
+}
