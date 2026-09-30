@@ -1,0 +1,101 @@
+PDB_ID,chain,protein_name,organism,keywords,residue_count,seqres_length,n_missing_internal,resolution,experimental_method,r_free,fold_class,helix_frac,sheet_frac,functional_class,ec_number,mean_bfactor,size_bin
+3CA7,A,Protein spitz,Drosophila melanogaster,HORMONE/SIGNALING PROTEIN,50,52,0,1.5,X-RAY DIFFRACTION,0.236,alpha+beta,0.16,0.36,signaling,,16.83,40-99
+2ON8,A,Immunoglobulin G-binding protein G,Streptococcus sp. G148,PROTEIN BINDING,56,56,0,1.35,X-RAY DIFFRACTION,0.195,alpha+beta,0.286,0.429,binding/regulatory,,20.79,40-99
+1BTI,A,BOVINE PANCREATIC TRYPSIN INHIBITOR,Bos taurus,SERINE PROTEASE INHIBITOR,58,58,0,2.2,X-RAY DIFFRACTION,,alpha+beta,0.276,0.259,enzyme,,8.08,40-99
+4NPD,A,Immunoglobulin G-binding protein A,Staphylococcus aureus,PROTEIN BINDING,58,58,0,0.9,X-RAY DIFFRACTION,0.13,all-alpha,0.776,0.0,binding/regulatory,,6.31,40-99
+2XMF,A,MYOSIN 1E SH3,Mus musculus,MOTOR PROTEIN,60,60,0,1.5,X-RAY DIFFRACTION,0.22756,all-beta,0.0,0.433,structural,,12.39,40-99
+1AME,A,TYPE III ANTIFREEZE PROTEIN ISOFORM HPLC 12,Zoarces americanus,ANTIFREEZE PROTEIN,66,67,0,1.65,X-RAY DIFFRACTION,0.282,alpha+beta,0.197,0.121,other,,13.89,40-99
+1TG0,A,Myosin tail region-interacting protein MTI1,Saccharomyces cerevisiae,CONTRACTILE PROTEIN,66,68,0,0.97,X-RAY DIFFRACTION,0.1931,all-beta,0.0,0.439,structural,,12.12,40-99
+6EXZ,A,mRNA export factor MEX67,Saccharomyces cerevisiae S288C,TRANSPORT PROTEIN,69,72,0,1.3,X-RAY DIFFRACTION,0.2067,all-alpha,0.899,0.0,transport,,24.31,40-99
+1B7V,A,PROTEIN (CYTOCHROME C-553),Sporosarcina pasteurii,ELECTRON TRANSFER,71,71,0,1.7,X-RAY DIFFRACTION,0.206,all-alpha,0.549,0.0,transport,,5.62,40-99
+1OK0,A,ALPHA-AMYLASE INHIBITOR HOE-467A,Streptomyces tendae,INHIBITOR,74,74,0,0.93,X-RAY DIFFRACTION,0.13,all-beta,0.0,0.446,other,,6.4,40-99
+2B8I,A,PAS factor,Vibrio vulnificus,LIPID BINDING PROTEIN,77,77,0,1.8,X-RAY DIFFRACTION,0.232,all-alpha,0.909,0.0,binding/regulatory,,28.5,40-99
+1PK4,A,PLASMINOGEN KRINGLE 4,Homo sapiens,HYDROLASE(SERINE PROTEASE),79,79,2,1.9,X-RAY DIFFRACTION,,all-beta,0.0,0.228,enzyme,,16.65,40-99
+7PDI,A,Acyl carrier protein,Pseudomonas putida KT2440,LIPID BINDING PROTEIN,81,82,1,1.69,X-RAY DIFFRACTION,0.2448,all-alpha,0.728,0.0,binding/regulatory,,42.56,40-99
+1A32,A,RIBOSOMAL PROTEIN S15,Geobacillus stearothermophilus,RIBOSOMAL PROTEIN,85,88,0,2.1,X-RAY DIFFRACTION,0.318,all-alpha,0.765,0.0,other,,29.21,40-99
+8U0I,A,PilZ domain-containing protein,Pseudomonas aeruginosa PA14,SIGNALING PROTEIN,85,90,0,1.541,X-RAY DIFFRACTION,0.2101,all-beta,0.047,0.506,signaling,,24.19,40-99
+6TGS,A,Protein NBR1 homolog,Arabidopsis thaliana,SIGNALING PROTEIN,88,94,0,1.53,X-RAY DIFFRACTION,0.2549,alpha+beta,0.284,0.33,signaling,,29.28,40-99
+8JN0,A,Alpha-amylase,Alkalihalophilus pseudofirmus,HYDROLASE,89,89,0,1.22826373091,X-RAY DIFFRACTION,0.223181006645,all-beta,0.0,0.449,enzyme,,19.19,40-99
+6IWP,A,Non-specific lipid-transfer protein,Solanum melongena,LIPID TRANSPORT,90,92,0,2.4,X-RAY DIFFRACTION,0.2417,all-alpha,0.767,0.0,transport,,49.51,40-99
+2P3H,A,Uncharacterized CBS domain-containing protein,Corynebacterium glutamicum,TRANSPORT PROTEIN,98,101,0,1.8,X-RAY DIFFRACTION,0.228,alpha+beta,0.276,0.347,transport,,34.19,40-99
+4F2E,A,CupA,Streptococcus pneumoniae D39,METAL TRANSPORT,98,98,0,1.449,X-RAY DIFFRACTION,0.1998,all-beta,0.041,0.561,transport,,12.74,40-99
+1B0T,A,PROTEIN (FERREDOXIN I),Azotobacter vinelandii,ELECTRON TRANSPORT,106,106,0,2.1,X-RAY DIFFRACTION,,alpha+beta,0.321,0.113,transport,,13.0,100-199
+1E9M,A,FERREDOXIN VI,Rhodobacter capsulatus,IRON-SULFUR PROTEIN,106,106,0,2.07,X-RAY DIFFRACTION,0.214,alpha+beta,0.292,0.198,other,,29.23,100-199
+2VQ4,A,GLUCOAMYLASE A,Rhizopus arrhizus,HYDROLASE,106,106,0,1.25,X-RAY DIFFRACTION,0.169,all-beta,0.047,0.528,enzyme,3.2.1.3,8.58,100-199
+1IU9,A,aspartate racemase,Pyrococcus horikoshii OT3,ISOMERASE,111,111,0,2.04,X-RAY DIFFRACTION,0.267,alpha/beta,0.667,0.117,enzyme,5.1.1.13,21.72,100-199
+9TSM,A,"Bromodomain protein, putative",Plasmodium falciparum,TRANSCRIPTION,117,119,0,1.25,X-RAY DIFFRACTION,0.1313,all-alpha,0.761,0.0,binding/regulatory,,11.99,100-199
+3ZSU,A,TLL2057 PROTEIN,Thermosynechococcus vestitus BP-1,PHOTOSYNTHESIS,118,130,0,1.6,X-RAY DIFFRACTION,0.187,all-alpha,0.915,0.0,other,,18.4,100-199
+4R7R,A,Putative lipoprotein,Clostridium perfringens ATCC 13124,LIPID BINDING PROTEIN,121,128,3,2.449,X-RAY DIFFRACTION,0.238,alpha+beta,0.331,0.273,binding/regulatory,,40.78,100-199
+5WFY,A,DNA ligase,Tequatrovirus T4,LIGASE,127,136,4,1.4,X-RAY DIFFRACTION,0.1815,all-alpha,0.654,0.0,enzyme,6.5.1.1,14.86,100-199
+1QQL,A,"Fibroblast growth factor 7, Fibroblast growth factor 1 chimera",Rattus norvegicus,HORMONE/GROWTH FACTOR,131,140,0,2.3,X-RAY DIFFRACTION,0.328,all-beta,0.023,0.344,signaling,,28.55,100-199
+5YZ4,A,rRNA-processing protein fcf1,Schizosaccharomyces pombe 972h-,HYDROLASE,133,133,0,2.135,X-RAY DIFFRACTION,0.287,alpha/beta,0.481,0.211,enzyme,,32.27,100-199
+1E29,A,CYTOCHROME C549,Synechocystis sp.,ELECTRON TRANSPORT,135,135,0,1.21,X-RAY DIFFRACTION,0.2124,all-alpha,0.489,0.044,transport,,24.96,100-199
+2V72,A,EXO-ALPHA-SIALIDASE,Clostridium perfringens,SUGAR BINDING PROTEIN,137,143,0,2.25,X-RAY DIFFRACTION,0.325,alpha+beta,0.102,0.526,enzyme,3.2.1.18,49.74,100-199
+5V6F,A,Hemolysin-related protein,Vibrio cholerae O1 biovar El Tor str. N16961,SUGAR BINDING PROTEIN,137,138,0,1.5,X-RAY DIFFRACTION,0.1922,all-beta,0.0,0.54,binding/regulatory,,5.12,100-199
+6WIN,A,Type 6 secretion amidase effector 2,Salmonella enterica subsp. enterica serovar Typhi,ANTIMICROBIAL PROTEIN,138,140,2,2.05,X-RAY DIFFRACTION,0.2238,alpha+beta,0.196,0.239,other,,22.26,100-199
+2OKM,A,Collagen adhesin,Enterococcus faecalis,CELL ADHESION,146,147,0,1.65,X-RAY DIFFRACTION,0.216,alpha+beta,0.13,0.514,structural,,14.54,100-199
+6H1N,A,BCL2-like 10 (Apoptosis facilitator),Danio rerio,APOPTOSIS,148,152,2,2.0,X-RAY DIFFRACTION,0.2237,all-alpha,0.872,0.0,signaling,,53.91,100-199
+5B3K,A,Uncharacterized protein PA3435,Pseudomonas aeruginosa PAO1,ELECTRON TRANSPORT,150,150,0,1.7,X-RAY DIFFRACTION,0.22015,alpha/beta,0.473,0.213,transport,,15.19,100-199
+5Y8E,A,Sefir domain protein,Bacillus cereus F65185,SIGNALING PROTEIN,154,154,0,1.804,X-RAY DIFFRACTION,0.1963,alpha/beta,0.5,0.162,signaling,,20.24,100-199
+9UDY,A,Lectin-like fold protein,Agaricus bisporus,SUGAR BINDING PROTEIN,156,170,0,1.51,X-RAY DIFFRACTION,0.19376,all-beta,0.09,0.353,binding/regulatory,,23.12,100-199
+4NNG,A,30S ribosomal protein S1,Mycobacterium tuberculosis H37Rv,RIBOSOMAL PROTEIN,157,158,0,2.02,X-RAY DIFFRACTION,0.25956,alpha+beta,0.42,0.268,other,,31.29,100-199
+1UWF,A,FIMH PROTEIN,Escherichia coli J96,CELL ADHESION,158,158,0,1.69,X-RAY DIFFRACTION,0.2181,all-beta,0.044,0.519,structural,,12.47,100-199
+1P2X,A,Ras GTPase-activating-like protein,Schizosaccharomyces pombe,PROTEIN BINDING,159,159,0,2.21,X-RAY DIFFRACTION,0.262,all-alpha,0.698,0.0,binding/regulatory,,14.76,100-199
+9DEE,A,serine hydrolase,synthetic construct,HYDROLASE,159,166,0,1.21,X-RAY DIFFRACTION,0.2436,all-alpha,0.906,0.0,enzyme,3.2.1.31,22.22,100-199
+3KLB,A,Putative Flavoprotein,Bacteroides fragilis NCTC 9343,FLAVOPROTEIN,160,162,2,1.75,X-RAY DIFFRACTION,0.179,alpha/beta,0.438,0.169,other,,25.51,100-199
+7WZ5,A,Interferon C,Larimichthys crocea,CYTOKINE,161,161,0,1.39,X-RAY DIFFRACTION,0.2128,all-alpha,0.745,0.0,signaling,,28.47,100-199
+7AVH,A,LPXTG cell wall surface protein,Streptococcus gordonii str. Challis substr. CH1,CELL ADHESION,167,167,0,1.35,X-RAY DIFFRACTION,0.17027,all-beta,0.072,0.491,structural,,15.33,100-199
+1Z27,A,ookinete surface protein Pvs25,Plasmodium vivax,CELL ADHESION,175,186,0,2.08,X-RAY DIFFRACTION,0.267,all-beta,0.074,0.394,structural,,45.7,100-199
+1HNF,A,CD2,Homo sapiens,T LYMPHOCYTE ADHESION GLYCOPROTEIN,179,182,0,2.5,X-RAY DIFFRACTION,,all-beta,0.061,0.542,structural,,31.79,100-199
+1DUS,A,MJ0882,Methanocaldococcus jannaschii,STRUCTURAL GENOMICS,192,194,2,1.8,X-RAY DIFFRACTION,0.235,alpha/beta,0.349,0.323,enzyme,2.1.1,19.13,100-199
+5YXM,A,"Dynein light chain 1, axonemal",Chlamydomonas reinhardtii,CONTRACTILE PROTEIN,194,203,0,1.545,X-RAY DIFFRACTION,0.189,alpha/beta,0.423,0.113,structural,,15.89,100-199
+1CD2,A,DIHYDROFOLATE REDUCTASE,Pneumocystis carinii,OXIDOREDUCTASE,206,206,0,2.2,X-RAY DIFFRACTION,,alpha/beta,0.209,0.282,enzyme,1.5.1.3,25.39,200-349
+8DLD,A,Chalcone-flavonone isomerase family protein,Physcomitrium patens,SIGNALING PROTEIN,207,216,0,1.85,X-RAY DIFFRACTION,0.2244,alpha+beta,0.43,0.295,signaling,,32.81,200-349
+6FTB,A,Monofunctional glycosyltransferase,Staphylococcus aureus MW2,TRANSFERASE,210,210,0,2.1,X-RAY DIFFRACTION,0.237,all-alpha,0.667,0.0,enzyme,2.4.99.28,34.01,200-349
+1C4F,A,GREEN FLUORESCENT PROTEIN,Aequorea victoria,FLUORESCENT PROTEIN,224,236,3,2.25,X-RAY DIFFRACTION,,all-beta,0.094,0.509,other,,39.69,200-349
+2JH7,A,MICRONEMAL PROTEIN 1,Toxoplasma gondii,CELL ADHESION,225,246,2,2.07,X-RAY DIFFRACTION,0.212,alpha+beta,0.244,0.32,structural,,26.61,200-349
+4BGP,A,NUCLEOPROTEIN,La Crosse virus,VIRAL PROTEIN,228,236,7,1.8,X-RAY DIFFRACTION,0.20409,all-alpha,0.654,0.035,other,,26.18,200-349
+5LY8,A,Tail component,Lactobacillus phage J-1,SUGAR BINDING PROTEIN,230,247,0,1.28,X-RAY DIFFRACTION,0.198,all-beta,0.065,0.53,binding/regulatory,,15.3,200-349
+3MBR,X,Glutamine cyclotransferase,Xanthomonas campestris pv. campestris,TRANSFERASE,236,243,0,1.44,X-RAY DIFFRACTION,0.20871,all-beta,0.017,0.534,enzyme,2.3.2.5,28.58,200-349
+4X35,A,Polyhedrin,Operophtera brumata cypovirus 18,VIRAL PROTEIN,245,248,2,1.5,X-RAY DIFFRACTION,0.1695,alpha+beta,0.282,0.302,other,,4.97,200-349
+28LK,A,complement-inhibiting protein ChiB,Borrelia recurrentis,PROTEIN BINDING,256,283,5,1.5,X-RAY DIFFRACTION,0.215,all-alpha,0.828,0.035,binding/regulatory,,27.67,200-349
+7E7N,A,"Fucose-binding lectin protein,Fucose-binding lectin protein,Fucose-binding lectin protein",Ralstonia solanacearum,SUGAR BINDING PROTEIN,259,272,9,1.55,X-RAY DIFFRACTION,0.2004,all-beta,0.0,0.68,binding/regulatory,,16.06,200-349
+3BKH,A,lytic transglycosylase,Phikzvirus phiKZ,HYDROLASE,260,268,8,2.5,X-RAY DIFFRACTION,0.251,all-alpha,0.681,0.0,enzyme,,59.19,200-349
+5G59,A,ESTERASE,Pyrococcus furiosus,STRUCTURAL PROTEIN,274,275,0,1.613,X-RAY DIFFRACTION,0.1944,alpha/beta,0.511,0.182,structural,,12.41,200-349
+7X3H,A,"CBg-ParM triple mutant R204D, K230D and N234D",Clostridium botulinum,STRUCTURAL PROTEIN,276,290,10,1.7,X-RAY DIFFRACTION,0.224,alpha+beta,0.402,0.322,structural,,20.07,200-349
+2XV1,A,IRON-UPTAKE SYSTEM-BINDING PROTEIN,Bacillus subtilis,TRANSPORT PROTEIN,283,311,0,2.15,X-RAY DIFFRACTION,0.23659,alpha/beta,0.502,0.187,transport,,48.3,200-349
+4MDY,A,Periplasmic binding protein,Mycolicibacterium smegmatis MC2 155,TRANSPORT PROTEIN,283,295,2,1.78,X-RAY DIFFRACTION,0.2005,alpha/beta,0.53,0.163,transport,,22.8,200-349
+4AK2,A,BT_4661,Bacteroides thetaiotaomicron VPI-5482,HEPARIN-BINDING PROTEIN,286,288,0,1.35,X-RAY DIFFRACTION,0.19062,alpha+beta,0.189,0.318,binding/regulatory,,16.28,200-349
+9LT9,A,mRNA export factor GLE1,Debaryomyces hansenii,RNA BINDING PROTEIN,293,293,0,1.5,X-RAY DIFFRACTION,0.1934,all-alpha,0.863,0.014,binding/regulatory,,16.92,200-349
+5MVX,A,Delta-like protein 4,Homo sapiens,SIGNALING PROTEIN,299,309,0,2.17,X-RAY DIFFRACTION,0.2293,all-beta,0.033,0.395,signaling,,47.03,200-349
+26DI,A,NAD(P)H dependent protein,Illicium verum,PLANT PROTEIN,310,321,0,2.329,X-RAY DIFFRACTION,0.2727844894,alpha/beta,0.539,0.161,other,,42.62,200-349
+6YJJ,A,CYRI-B (FAM49B),Rhincodon typus,CYTOSOLIC PROTEIN,310,325,15,2.4,X-RAY DIFFRACTION,0.2415,all-alpha,0.706,0.0,other,,58.48,200-349
+1PJX,A,DIISOPROPYLFLUOROPHOSPHATASE,Loligo vulgaris,HYDROLASE,314,314,0,0.85,X-RAY DIFFRACTION,0.1284,all-beta,0.016,0.487,enzyme,3.8.2.2,7.87,200-349
+3LPZ,A,Uncharacterized protein,Thermochaetoides thermophila DSM 1495,PROTEIN TRANSPORT,314,336,7,1.98,X-RAY DIFFRACTION,0.222,all-alpha,0.799,0.013,transport,,29.89,200-349
+2FQX,A,Membrane lipoprotein tmpC,Treponema pallidum,TRANSPORT PROTEIN,316,318,0,1.7,X-RAY DIFFRACTION,0.224,alpha/beta,0.494,0.199,transport,,15.7,200-349
+4R6Y,A,Putative 2-aminoethylphosphonate-binding periplasmic protein,Salmonella enterica subsp. enterica serovar Typhimurium str. LT2,TRANSPORT PROTEIN,317,318,0,1.22,X-RAY DIFFRACTION,0.14781,alpha+beta,0.492,0.174,transport,,17.44,200-349
+8BPZ,A,SPbeta prophage-derived uncharacterized protein YopR,Bacillus subtilis subsp. subtilis str. 168,DNA BINDING PROTEIN,322,326,0,2.2,X-RAY DIFFRACTION,0.24861,all-alpha,0.658,0.05,binding/regulatory,,60.59,200-349
+4U4B,A,Pectate lyase,Pectobacterium carotovorum,LYASE,326,347,0,2.1,X-RAY DIFFRACTION,0.2499,all-beta,0.034,0.472,enzyme,4.2.2.2,20.41,200-349
+7VOB,C,Cytosylglucuronate decarboxylase,Streptomyces griseochromogenes,BIOSYNTHETIC PROTEIN,327,360,0,2.09224113188,X-RAY DIFFRACTION,0.237064861224,alpha/beta,0.459,0.159,other,,54.44,200-349
+1YFQ,A,Cell cycle arrest protein BUB3,Saccharomyces cerevisiae,SIGNALING PROTEIN,342,342,0,1.1,X-RAY DIFFRACTION,0.186,all-beta,0.056,0.48,signaling,,12.54,200-349
+6GKW,A,Putative phage XkdK-like protein,Clostridioides difficile 630,STRUCTURAL PROTEIN,344,356,7,1.9,X-RAY DIFFRACTION,0.2485,alpha+beta,0.468,0.189,structural,,50.01,200-349
+4WA0,A,possible adhesin,Caldicellulosiruptor kronotskyensis 2002,CELL ADHESION,352,358,6,1.7,X-RAY DIFFRACTION,0.1941,alpha/beta,0.131,0.44,structural,,17.99,350-500
+2W5O,A,ALPHA-L-ARABINOFURANOSIDASE,Fusarium graminearum,HYDROLASE,354,367,5,2.05,X-RAY DIFFRACTION,0.216,all-beta,0.011,0.432,enzyme,3.2.1.55,12.63,350-500
+5NOA,A,Family 88 glycosyl hydrolase,Bacteroides thetaiotaomicron,HYDROLASE,354,381,0,1.26,X-RAY DIFFRACTION,0.14801,all-alpha,0.661,0.011,enzyme,3.2.1.172,10.06,350-500
+7KOB,A,Antigen 43b,Escherichia coli CFT073,MICROBIAL PROTEIN,361,367,4,2.08,X-RAY DIFFRACTION,0.2012,all-beta,0.0,0.521,other,,24.28,350-500
+6XZL,A,Ultraviolet-B receptor UVR8,Arabidopsis thaliana,PLANT PROTEIN,365,373,8,1.39,X-RAY DIFFRACTION,0.1793,all-beta,0.082,0.441,other,,21.03,350-500
+2ODL,A,Adhesin,Haemophilus influenzae,CELL ADHESION,368,373,4,1.92,X-RAY DIFFRACTION,0.2173,all-beta,0.065,0.524,structural,,13.26,350-500
+6FI2,A,VexL,Achromobacter denitrificans,LYASE,375,408,2,1.22,X-RAY DIFFRACTION,0.16621,alpha/beta,0.173,0.336,enzyme,4.2.2.2,17.15,350-500
+3I45,A,Twin-arginine translocation pathway signal protein,Rhodospirillum rubrum ATCC 11170,SIGNALING PROTEIN,378,387,0,1.36,X-RAY DIFFRACTION,0.174,alpha/beta,0.519,0.206,signaling,,10.04,350-500
+4OI9,A,Intercellular adhesion molecule 5,Homo sapiens,CELL ADHESION,378,378,0,2.5,X-RAY DIFFRACTION,0.2634,all-beta,0.058,0.585,structural,,76.15,350-500
+4N03,A,ABC-type branched-chain amino acid transport systems periplasmic component-like protein,Thermomonospora curvata DSM 43183,TRANSPORT PROTEIN,381,405,8,1.15,X-RAY DIFFRACTION,0.1493,alpha/beta,0.486,0.184,transport,,12.85,350-500
+8ULA,A,Extracellular solute-binding protein,Listeria monocytogenes,SUGAR BINDING PROTEIN,399,426,0,2.0,X-RAY DIFFRACTION,0.2291,alpha+beta,0.604,0.135,binding/regulatory,,34.74,350-500
+5K2X,A,Sugar ABC transporter permease,Mycobacterium tuberculosis,TRANSPORT PROTEIN,414,420,0,1.5,X-RAY DIFFRACTION,0.1891,alpha+beta,0.529,0.155,transport,,11.93,350-500
+8WG6,A,"FimA fimbrial subunit-like protein, putative",Streptococcus sanguinis SK36,CELL ADHESION,414,451,5,2.4,X-RAY DIFFRACTION,0.26939,alpha+beta,0.118,0.466,structural,,19.09,350-500
+4XE7,A,Uncharacterized protein,Bacillus thuringiensis serovar kurstaki str. YBT-1520,STRUCTURAL PROTEIN,419,423,0,2.0,X-RAY DIFFRACTION,0.2333,alpha+beta,0.453,0.241,structural,,34.14,350-500
+6S4M,A,Major facilitator superfamily domain-containing protein 10,Homo sapiens,TRANSPORT PROTEIN,426,451,0,2.4,X-RAY DIFFRACTION,0.2583,all-alpha,0.927,0.0,transport,,37.41,350-500
+6YU7,A,Sodium-dependent transporter,Halalkalibacterium halodurans,TRANSPORT PROTEIN,442,455,0,2.3,X-RAY DIFFRACTION,0.2627,all-alpha,0.826,0.0,transport,,35.09,350-500
+3IV0,A,SusD homolog,Bacteroides thetaiotaomicron VPI-5482,SUGAR BINDING PROTEIN,448,481,22,1.35,X-RAY DIFFRACTION,0.167,all-alpha,0.603,0.049,binding/regulatory,,14.48,350-500
+4U7L,A,Leucine-rich repeats and immunoglobulin-like domains protein 1,Homo sapiens,SIGNALING PROTEIN,455,456,0,2.3,X-RAY DIFFRACTION,0.2478,alpha/beta,0.149,0.185,signaling,,69.64,350-500
+9SJJ,A,SusD homolog,Bacteroides thetaiotaomicron VPI-5482,SUGAR BINDING PROTEIN,462,478,0,1.7,X-RAY DIFFRACTION,0.191,all-alpha,0.576,0.048,binding/regulatory,,31.59,350-500
+8RA0,A,AMP-dependent synthetase,Kitasatospora cystarginea,BIOSYNTHETIC PROTEIN,484,499,0,1.89,X-RAY DIFFRACTION,0.2376,alpha+beta,0.36,0.262,other,,32.05,350-500

@@ -71,6 +71,12 @@ pip install -r validation/requirements.txt
 jupyter notebook validation/multi_protein_validation.ipynb
 ```
 
+<!-- benchmark-summary:start -->
+### Large-scale benchmark
+
+Across 99 structurally diverse, non-redundant X-ray protein structures (100 attempted), the model achieved a mean Pearson correlation of 0.40, median 0.41, and standard deviation 0.22 between ANM-predicted residue flexibility and experimental B-factors (95% bootstrap CI of the mean [0.36, 0.45]), using one untuned parameter set. Performance varies widely between proteins. Full method, statistics, figures and limitations: [validation/VALIDATION_REPORT.md](validation/VALIDATION_REPORT.md). Reproduce with `python validation/build_benchmark.py` (once) and `python validation/run_benchmark.py`.
+<!-- benchmark-summary:end -->
+
 ## Project structure
 
 ```
