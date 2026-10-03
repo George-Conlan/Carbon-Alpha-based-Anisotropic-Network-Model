@@ -13,8 +13,8 @@ An Anisotropic Network Model treats a protein as a mass-and-spring network: each
 Requires Python 3.9+.
 
 ```
-git clone <this-repo-url>
-cd "Protein Structure Math Modeling- Building a Carbon alpha only anisotropic nerwork model"
+git clone https://github.com/George-Conlan/Carbon-Alpha-based-Anisotropic-Network-Model.git
+cd Carbon-Alpha-based-Anisotropic-Network-Model
 pip install -r requirements.txt
 ```
 
@@ -39,7 +39,7 @@ This prints a short summary to the terminal and (by default) writes `<structure>
 | `--chain` | all chains | Restrict analysis to a single chain ID |
 | `--cutoff` | `8.0` | Contact cutoff distance, in Angstroms |
 | `--gamma` | `1.0` | Uniform spring constant |
-| `--n-modes` | `20` | Number of low-frequency modes to solve for |
+| `--n-modes` | `20` | Number of low-frequency modes to solve for, or `all` to use every non-zero mode (dense diagonalization) |
 | `--n-keep` | `n-modes - 6` | Number of nonzero (non-rigid-body) modes to keep |
 | `--tol` | `1e-6` | Eigenvalue tolerance for the rigid-body mode cutoff |
 | `--no-report` | off | Skip generating the PDF report |
@@ -102,7 +102,7 @@ tests/                      pytest suite
 pytest
 ```
 
-Test coverage currently exists for `analysis.py`, `hessian.py`, and `modes.py`. `structure_io.py`, `contact_graph.py`, `validation.py`, `visualize.py`, `pipeline.py`, and `report.py` don't have tests yet.
+Test coverage exists for `analysis.py`, `hessian.py`, `modes.py`, `structure_io.py`, `contact_graph.py` and `validation.py`, plus the `--n-modes all` option and the MSF/B-factor index alignment through the pipeline. `visualize.py` and `report.py` don't have tests yet. Run `pytest tests` (plain `pytest` also scans `validation/`).
 
 ## License
 
