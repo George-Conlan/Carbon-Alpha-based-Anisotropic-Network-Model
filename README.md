@@ -102,7 +102,7 @@ tests/                      pytest suite
 pytest
 ```
 
-Test coverage exists for `analysis.py`, `hessian.py`, `modes.py`, `structure_io.py`, `contact_graph.py` and `validation.py`, plus the `--n-modes all` option and the MSF/B-factor index alignment through the pipeline. `visualize.py` and `report.py` don't have tests yet. Run `pytest tests` (plain `pytest` also scans `validation/`).
+Test coverage exists for `analysis.py`, `hessian.py`, `modes.py`, `structure_io.py`, `contact_graph.py` and `validation.py`, plus the `--n-modes all` option and the MSF/B-factor index alignment through the pipeline. `visualize.py` and `report.py` don't have tests yet. Run `pytest` from the repo root (`pytest.ini` limits collection to `tests/`).
 
 ## License
 
