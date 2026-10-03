@@ -73,13 +73,122 @@ def pfmt(p):
     return "<0.001" if p < 0.001 else f"{p:.3f}"
 
 
-def write_report(bench, results, ok, summ, assoc, groups, figs):
+RESULTS_ALL = "results_100_proteins_all_modes.csv"
+
+
+def stat_table_two(P, S, Pa, Sa, n14):
+    def ci(s):
+        return f"[{f(s['ci95_mean_low'])}, {f(s['ci95_mean_high'])}]"
+
+    def cim(s):
+        return f"[{f(s['ci95_median_low'])}, {f(s['ci95_median_high'])}]"
+
+    rows = [("N (valid proteins)", P["N"], Pa["N"], S["N"], Sa["N"])]
+    for lab, k in (("Mean", "mean"), ("Median", "median"), ("Standard deviation", "sd"),
+                   ("25th percentile", "q25"), ("75th percentile", "q75"),
+                   ("Minimum", "min"), ("Maximum", "max")):
+        rows.append((lab, f(P[k]), f(Pa[k]), f(S[k]), f(Sa[k])))
+    rows.append(("95% bootstrap CI of mean", ci(P), ci(Pa), ci(S), ci(Sa)))
+    rows.append(("95% bootstrap CI of median", cim(P), cim(Pa), cim(S), cim(Sa)))
+    out = [f"| Statistic | Pearson r ({n14} modes) | Pearson r (all modes) | "
+           f"Spearman rho ({n14} modes) | Spearman rho (all modes) |",
+           "|---|---|---|---|---|"]
+    out += ["| " + " | ".join(str(c) for c in r) + " |" for r in rows]
+    return "\n".join(out)
+
+
+def verdict(d, metric):
+    """Plain-language direction of the paired (all modes minus 14 modes) difference."""
+    if d["wilcoxon_p"] >= 0.05:
+        return (f"On {metric}, all-modes is not distinguishable from the 14-mode truncation "
+                f"(paired mean difference {d['mean_diff']:+.3f}, Wilcoxon p {pfmt(d['wilcoxon_p'])}).")
+    word = "worse" if d["mean_diff"] < 0 else "better"
+    return (f"On {metric}, all-modes is **{word}** than the 14-mode truncation "
+            f"(paired mean difference {d['mean_diff']:+.3f}, Wilcoxon p {pfmt(d['wilcoxon_p'])}).")
+
+
+def mode_sections(results, summ, ctx):
+    """Text blocks describing the all-modes comparison; empty if it was not run."""
+    if ctx is None:
+        return dict(method="", section="", trunc="", onepar=None, concl="")
+    n14, sa, c, oka = summ["n_modes_kept"], ctx["summ"], ctx["cmp"], ctx["ok"]
+    P, S, Pa, Sa = summ["pearson"], summ["spearman"], sa["pearson"], sa["spearman"]
+    col14, cola = c["collectivity_14"], c["collectivity_all"]
+    if cola["spearman_p"] < 0.05 and cola["spearman_rho"] * col14["spearman_rho"] > 0:
+        holds = "**still holds**"
+    elif cola["spearman_p"] < 0.05:
+        holds = "**reverses sign**"
+    else:
+        holds = "**does not hold**"
+    bad14 = results[results.status != "ok"]
+    bad_a = ctx["results"][ctx["results"].status != "ok"]
+    same_fail = set(zip(bad14.PDB_ID, bad14.chain)) == set(zip(bad_a.PDB_ID, bad_a.chain))
+    thr = [f"| Threshold | % of valid proteins ({n14} modes) | % of valid proteins (all modes) |", "|---|---|---|"]
+    for lab, k in (("r > 0", "pct_pearson_gt_0"), ("r >= 0.3", "pct_pearson_ge_0.3"),
+                   ("r >= 0.5", "pct_pearson_ge_0.5"), ("r >= 0.7", "pct_pearson_ge_0.7")):
+        thr.append(f"| {lab} | {f(summ[k], 1)} % | {f(sa[k], 1)} % |")
+    pair = [f"| Paired difference (all modes minus {n14} modes) | Mean | Median | All-modes higher in | "
+            "All-modes lower in | Wilcoxon p |", "|---|---|---|---|---|---|"]
+    for lab, k in (("Pearson r", "pearson"), ("Spearman rho", "spearman")):
+        d = c[k]
+        pair.append(f"| {lab} | {d['mean_diff']:+.3f} | {d['median_diff']:+.3f} | {d['n_all_higher']} proteins | "
+                    f"{d['n_all_lower']} proteins | {pfmt(d['wilcoxon_p'])} |")
+    n_extra_a = int((oka.n_zero_modes > 6).sum())
+    prm = sa["anm_params"]
+    nl = "\n"
+    method = (f"- **All-modes configuration (secondary).** Identical to the above except that MSF is summed over "
+              f"**every non-zero mode** (eigenvalues > {prm['tol']:g}) from a dense diagonalisation of the full Hessian, "
+              f"because sparse shift-invert cannot return the whole spectrum. This keeps "
+              f"{sa['n_modes_kept_min']}-{sa['n_modes_kept_max']} modes per protein "
+              f"(median {sa['n_modes_kept_median']:.0f}). Same proteins, selection CSV, cutoff and gamma; nothing was tuned.\n")
+    section = f"""## Mode truncation: {n14} modes vs all non-zero modes
+
+The primary benchmark keeps only the {n14} lowest non-zero modes, a truncation inherited from the package default
+(`--n-modes 20`) rather than chosen. To measure what that truncation does, the identical benchmark was re-run with MSF
+computed from every non-zero mode (`python validation/run_benchmark.py --n-modes all`). The protein list, selection CSV,
+cutoff ({prm['cutoff']}), gamma ({prm['gamma']}) and tolerance are unchanged; no parameter was tuned and no protein was added or
+removed. Per-protein all-modes results are in [{RESULTS_ALL}]({RESULTS_ALL}); the {n14}-mode results were not modified.
+Valid proteins: {summ['n_valid']} ({n14} modes), {sa['n_valid']} (all modes); {c['n_paired']} are valid in both and used for the paired comparison.
+
+{stat_table_two(P, S, Pa, Sa, n14)}
+
+{nl.join(thr)}
+
+{nl.join(pair)}
+
+{verdict(c['pearson'], 'Pearson r')}
+{verdict(c['spearman'], 'Spearman rho')}
+
+**Lead-mode collectivity.** Lead-mode collectivity is computed from the lowest non-zero mode, which is the same in both
+configurations (maximum absolute difference between the two runs: {c['lead_collectivity_max_abs_diff']:.2g}); what changes is the
+per-protein r it is compared against. Spearman rho between lead-mode collectivity and per-protein Pearson r:
+{col14['spearman_rho']:+.2f} (p {pfmt(col14['spearman_p'])}) with {n14} modes, {cola['spearman_rho']:+.2f} (p {pfmt(cola['spearman_p'])}) with
+all modes (Pearson: {col14['pearson_r']:+.2f}, p {pfmt(col14['pearson_p'])} vs {cola['pearson_r']:+.2f}, p {pfmt(cola['pearson_p'])}).
+The association {holds} under all modes (criterion: same sign and p < 0.05; p-values are not corrected for multiple comparisons).
+
+{"The same proteins fail in both configurations." if same_fail else "The set of failed proteins differs between configurations; see the failure_reason column of each results file."}
+{n_extra_a} proteins have more than 6 near-zero modes in the all-modes run (the same floppy-terminus modes, excluded exactly as before).
+
+"""
+    trunc = (" The all-modes comparison above reports how much this truncation matters on this benchmark, whichever way it goes;"
+             " no cutoff, gamma or protein-list change was made in response to it.")
+    onepar = (f"cutoff {prm['cutoff']} A, gamma {prm['gamma']}, {n14} kept modes (primary) and, separately, all non-zero modes "
+              f"(see Mode truncation), applied uniformly by design. These were not optimised; other cutoffs would give different "
+              f"numbers, and no sensitivity analysis beyond the all-modes comparison is included in this report.")
+    concl = (f" Re-running the identical benchmark with all non-zero modes gave mean Pearson r {f(Pa['mean'], 2)} "
+             f"(vs {f(P['mean'], 2)}) and mean Spearman rho {f(Sa['mean'], 2)} (vs {f(S['mean'], 2)}); "
+             f"{verdict(c['pearson'], 'Pearson r').replace('**', '').replace('On Pearson r', 'on Pearson r', 1)}")
+    return dict(method=method, section=section, trunc=trunc, onepar=onepar, concl=concl)
+
+
+def write_report(bench, results, ok, summ, assoc, groups, figs, all_ctx=None):
     P, S = summ["pearson"], summ["spearman"]
     nA, nV = summ["n_attempted"], summ["n_valid"]
     failed = results[results.status != "ok"]
     neg = ok[ok.pearson_r < 0]
     warned = results[results.warnings.fillna("") != ""]
     ap = summ["anm_params"]
+    mode_txt = mode_sections(results, summ, all_ctx)
 
     assoc_t = assoc.copy()
     assoc_t["Pearson"] = assoc_t.apply(lambda r: f"{r.pearson_r_vs_anm_r:+.2f} (p {pfmt(r.pearson_p)})", axis=1)
@@ -102,6 +211,9 @@ def write_report(bench, results, ok, summ, assoc, groups, figs):
               md_table(neg.sort_values("pearson_r"), ["PDB_ID", "chain", "protein_name", "n_residues", "pearson_r", "spearman_rho"],
                       {"n_residues": lambda v: int(v)}))
     n_extra = int((ok.n_zero_modes > 6).sum())
+    default_onepar = (f"cutoff {ap['cutoff']} A, gamma {ap['gamma']}, {summ['n_modes_kept']} kept modes, applied uniformly by design. "
+                      "These were not optimised; other cutoffs or all-mode MSF would give different numbers, "
+                      "and no sensitivity analysis is included in this report.")
 
     cnt_fold = bench.fold_class.value_counts()
     cnt_fn = bench.functional_class.value_counts()
@@ -120,7 +232,7 @@ def write_report(bench, results, ok, summ, assoc, groups, figs):
 
     md = f"""# ANM Validation Across {nA} Diverse Protein Structures
 
-*Generated by `validation/run_benchmark.py`; all numbers below are produced by that run (seed {20260930}).*
+*Generated by `validation/run_benchmark.py`; all numbers below are produced by that run (seed {20260930}).{' The secondary all-modes configuration is reported in its own section.' if all_ctx else ''}*
 
 ## Benchmark construction
 
@@ -166,7 +278,7 @@ All calculations use the repository's existing `anm` package, unchanged, with **
 - **Spring constant.** Uniform gamma = {ap['gamma']} for every contact.
 - **Hessian.** The 3N x 3N ANM Hessian is assembled from 3 x 3 super-elements -gamma * (u u^T), where u is the unit vector between connected nodes; diagonal blocks are the negative sum of the node's off-diagonal blocks.
 - **Normal modes.** The {ap['n_modes']} lowest-eigenvalue modes are computed by sparse shift-invert diagonalisation; eigenvalues <= {ap['tol']:g} (the 6 rigid-body translations/rotations, plus any extra "floppy" zero modes) are discarded and the next {summ['n_modes_kept']} modes are kept. **MSF therefore uses only the {summ['n_modes_kept']} lowest non-zero modes**, a truncation inherited from the package default, not tuned.
-- **MSF.** MSF_i = sum over kept modes k of (1/lambda_k) * |v_k,i|^2.
+{mode_txt['method']}- **MSF.** MSF_i = sum over kept modes k of (1/lambda_k) * |v_k,i|^2.
 - **Comparison with B-factors.** Experimental B-factors are converted with B = 8 pi^2 <u^2> / 3 (the package's `bfactor_to_msf`). Pearson and Spearman correlations are computed between the predicted MSF vector and the experimental C-alpha B-factor vector over the same residues, in residue order. Both metrics are invariant to the overall scale, so the gamma value and the unit conversion do not affect them.
 - **Metrics.** Pearson r measures linear agreement; Spearman rho measures rank agreement and is less sensitive to a few extreme residues (typically flexible termini).
 - **Collectivity.** Lead-mode collectivity is the package's participation-entropy measure (1/N) exp(-sum p_i ln p_i) for the lowest non-zero mode.
@@ -223,7 +335,7 @@ Pearson r by group (Kruskal-Wallis across groups with >= 3 members: {kw_txt}):
 
 {groups_md}
 
-## Figures
+{mode_txt['section']}## Figures
 
 {fig_md}
 
@@ -248,7 +360,7 @@ molecule:
 - **Refinement artefacts.** B-factors depend on the refinement program, restraints, TLS treatment, resolution and occupancy handling, so values are not strictly comparable between structures.
 - **Uniform springs.** A single gamma and a hard cutoff ignore that contacts differ in stiffness; terminal and loop residues with few contacts are the usual source of large errors.
 - **B-factors as a proxy.** B-factors report average positional spread in a crystal at typically cryogenic temperature, not intrinsic solution dynamics or functional motions.
-- **Mode truncation.** Only the {summ['n_modes_kept']} lowest non-zero modes contribute, which smooths the predicted profile.
+- **Mode truncation.** Only the {summ['n_modes_kept']} lowest non-zero modes contribute, which smooths the predicted profile.{mode_txt['trunc']}
 
 **Why some proteins do better than others.** In this benchmark, Pearson r has the following associations
 (Spearman rho across proteins): residue count {rho_of('Residue count')[0]:+.2f} (p {pfmt(rho_of('Residue count')[1])}),
@@ -277,7 +389,7 @@ representative mechanisms.
 - **Benchmark-selection bias.** Selection favours well-ordered, monomeric, high-resolution, single-chain structures that crystallise readily; flexible, multi-domain, disordered or membrane proteins are under-represented. Filtering on observed-residue coverage removes proteins with large disordered regions, which are exactly the flexible ones. The result describes this population, not proteins in general. Fold and function labels are heuristic.
 - **B-factor limitations.** See Interpretation; B-factors mix dynamics, disorder and refinement choices and are compared here without any per-structure correction (no TLS decomposition, no normalisation by resolution or packing).
 - **X-ray structures only.** No NMR, cryo-EM or room-temperature data; crystal environment affects every entry.
-- **One parameter set.** cutoff {ap['cutoff']} A, gamma {ap['gamma']}, {summ['n_modes_kept']} kept modes, applied uniformly by design. These were not optimised; other cutoffs or all-mode MSF would give different numbers, and no sensitivity analysis is included in this report.
+- **One parameter set.** {mode_txt['onepar'] or default_onepar}
 - **Missing residues.** Up to 5 % of residues may be missing internally and up to 10 % of the sequence unobserved; the missing segments are simply absent from the network, which can disconnect it or alter local stiffness. One disconnected-network failure is an example (see Failures).
 - **Crystal contacts.** Only the isolated chain (monomer, one asymmetric-unit copy) is modelled; lattice neighbours are ignored.
 - **Differences in refinement procedures.** Deposited B-factors come from different programs and protocols; no harmonisation was attempted.
@@ -292,7 +404,7 @@ flexibility show a moderate positive rank and linear relationship with experimen
 mean Spearman rho {f(S['mean'], 2)}, higher than mean Pearson r, which suggests a few extreme predicted residues depress the linear correlation). Performance varies widely, from r = {f(P['min'], 2)} to {f(P['max'], 2)}, and
 {len(neg)} proteins are not positively correlated. The model captures a real but partial signal of relative
 flexibility; it is not a quantitative predictor of B-factors, and these results do not show it reflects
-solution dynamics beyond what crystallographic B-factors measure.
+solution dynamics beyond what crystallographic B-factors measure.{mode_txt['concl']}
 """
     with open(bu.lp(os.path.join(HERE, "VALIDATION_REPORT.md")), "w", encoding="utf-8") as fh:
         fh.write(md)

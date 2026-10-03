@@ -37,12 +37,19 @@ FIG_DIR = os.path.join(HERE, "figures")
 # Identical for every protein -- the library defaults, stated explicitly.
 ANM_PARAMS = dict(cutoff=8.0, gamma=1.0, n_modes=20, n_keep=None, tol=1e-6)
 N_KEEP_EFFECTIVE = ANM_PARAMS["n_modes"] - 6  # pipeline default n_keep = n_modes - 6
+# Secondary configuration: identical except MSF uses every non-zero mode
+# (dense diagonalization). Its results go to separate files; the 14-mode
+# results above are never overwritten by an all-modes run.
+ALL_MODES_PARAMS = dict(ANM_PARAMS, n_modes="all")
+RESULTS_FILE = "results_100_proteins.csv"
+RESULTS_ALL_FILE = "results_100_proteins_all_modes.csv"
+SUMMARY_ALL_FILE = "summary_statistics_all_modes.json"
 
 
 # --------------------------------------------------------------------------
 # 1. Run ANM on every protein
 # --------------------------------------------------------------------------
-def analyze_one(row):
+def analyze_one(row, params=ANM_PARAMS):
     """Run the pipeline on one benchmark row. Always returns a dict; on any
     failure `status` is 'failed' and `failure_reason` says why."""
     out = {"PDB_ID": row.PDB_ID, "chain": row.chain, "protein_name": row.protein_name,
@@ -55,7 +62,7 @@ def analyze_one(row):
             raise RuntimeError("no PDB-format file available from RCSB")
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            res = run_anm_pipeline(path, chain_id=row.chain, report_path=None, **ANM_PARAMS)
+            res = run_anm_pipeline(path, chain_id=row.chain, report_path=None, **params)
         n = len(res.msf)
         out["n_residues"] = n
         out["connected"] = bool(res.connected)
@@ -80,12 +87,12 @@ def analyze_one(row):
         out["lead_mode_collectivity"] = float(res.collectivity[0])
         out["mean_collectivity_kept"] = float(np.mean(res.collectivity))
         out["n_modes_kept"] = int(len(res.kept_vals))
-        out["n_zero_modes"] = int(np.sum(res.eigvals <= ANM_PARAMS["tol"]))
+        out["n_zero_modes"] = int(np.sum(res.eigvals <= params["tol"]))
         out["lowest_kept_eigenvalue"] = float(res.kept_vals[0])
         if out["n_zero_modes"] != 6:
             warns.append(f"{out['n_zero_modes']} near-zero modes (6 rigid-body + "
                          f"{out['n_zero_modes'] - 6} floppy, all excluded)")
-        if not res.kept_vals.min() > ANM_PARAMS["tol"]:
+        if not res.kept_vals.min() > params["tol"]:
             raise RuntimeError("a rigid-body mode leaked into the kept modes")
         out["mean_bfactor_obs"] = float(bf[ok].mean())
         out["status"] = "ok"
@@ -95,12 +102,12 @@ def analyze_one(row):
     return out
 
 
-def run_all(bench, limit=None):
+def run_all(bench, limit=None, params=ANM_PARAMS):
     rows = []
     for i, row in enumerate(bench.itertuples(index=False), 1):
         if limit and i > limit:
             break
-        r = analyze_one(row)
+        r = analyze_one(row, params)
         tag = f"r={r['pearson_r']:+.3f}" if r["status"] == "ok" else f"FAILED ({r['failure_reason']})"
         print(f"[{i:3d}/{len(bench)}] {row.PDB_ID}_{row.chain}  N={row.residue_count:<4d} {tag}")
         rows.append(r)
@@ -139,6 +146,16 @@ def summarize(ok):
         summ[f"pct_pearson_ge_{t}"] = float(100 * np.mean(r >= t))
     summ["pct_pearson_p_lt_0.05_and_positive"] = float(
         100 * np.mean((ok.pearson_p.values < 0.05) & (r > 0)))
+    return summ
+
+
+def build_summ(results, ok, params, n_modes_kept, qc):
+    summ = summarize(ok)
+    summ.update(n_attempted=int(len(results)), n_valid=int(len(ok)),
+                anm_params=params, n_modes_kept=n_modes_kept,
+                weakest=ok.loc[ok.pearson_r.idxmin(), ["PDB_ID", "chain", "protein_name", "pearson_r"]].to_dict(),
+                strongest=ok.loc[ok.pearson_r.idxmax(), ["PDB_ID", "chain", "protein_name", "pearson_r"]].to_dict(),
+                qc=qc)
     return summ
 
 
@@ -323,6 +340,88 @@ def quality_control(bench, results):
     return qc
 
 
+def compare_configs(ok14, ok_all, assoc14, assoc_all):
+    """Paired comparison of the two configurations over proteins valid in both."""
+    m = ok14.merge(ok_all, on=["PDB_ID", "chain"], suffixes=("_14", "_all"))
+    out = {"n_paired": int(len(m))}
+    for key, col in (("pearson", "pearson_r"), ("spearman", "spearman_rho")):
+        d = (m[col + "_all"] - m[col + "_14"]).values
+        out[key] = {"mean_diff": float(d.mean()), "median_diff": float(np.median(d)),
+                    "n_all_higher": int((d > 0).sum()), "n_all_lower": int((d < 0).sum()),
+                    "wilcoxon_p": float(stats.wilcoxon(d).pvalue)}
+    out["lead_collectivity_max_abs_diff"] = float(
+        (m.lead_mode_collectivity_all - m.lead_mode_collectivity_14).abs().max())
+    for tag, a in (("14", assoc14), ("all", assoc_all)):
+        row = a.set_index("variable").loc["Lead-mode collectivity"]
+        out[f"collectivity_{tag}"] = {"spearman_rho": float(row.spearman_rho_vs_anm_r),
+                                      "spearman_p": float(row.spearman_p),
+                                      "pearson_r": float(row.pearson_r_vs_anm_r),
+                                      "pearson_p": float(row.pearson_p)}
+    return out
+
+
+def load_all_modes_ctx(bench, ok14, assoc14):
+    """Context for the all-modes configuration, read from its separate results
+    file; None if that file doesn't exist (all-modes never run)."""
+    path = bu.lp(os.path.join(HERE, RESULTS_ALL_FILE))
+    if not os.path.exists(path):
+        return None
+    results = pd.read_csv(path, dtype={"chain": str})
+    ok = results[results.status == "ok"].reset_index(drop=True)
+    summ = build_summ(results, ok, ALL_MODES_PARAMS, None, quality_control(bench, results))
+    summ["n_modes_kept_min"] = int(ok.n_modes_kept.min())
+    summ["n_modes_kept_median"] = float(ok.n_modes_kept.median())
+    summ["n_modes_kept_max"] = int(ok.n_modes_kept.max())
+    assoc = association_table(ok)
+    return {"results": results, "ok": ok, "summ": summ, "assoc": assoc,
+            "cmp": compare_configs(ok14, ok, assoc14, assoc)}
+
+
+def print_comparison(summ14, ctx):
+    s14, sa, c = summ14, ctx["summ"], ctx["cmp"]
+    print("\n=== 14 kept modes vs all non-zero modes ===")
+    print(f"valid proteins: {s14['n_valid']} (14 modes), {sa['n_valid']} (all modes); paired: {c['n_paired']}")
+    print(f"{'':22s}{'14 modes':>10s}{'all modes':>11s}")
+    for lab, k, f in (("Pearson r mean", "pearson", "mean"), ("Pearson r median", "pearson", "median"),
+                      ("Spearman rho mean", "spearman", "mean"), ("Spearman rho median", "spearman", "median")):
+        print(f"{lab:22s}{s14[k][f]:10.3f}{sa[k][f]:11.3f}")
+    for k in ("pearson", "spearman"):
+        d = c[k]
+        print(f"paired {k}: mean diff (all - 14) {d['mean_diff']:+.3f}, all higher in {d['n_all_higher']}, "
+              f"lower in {d['n_all_lower']}, Wilcoxon p = {d['wilcoxon_p']:.3g}")
+    for tag in ("14", "all"):
+        d = c[f"collectivity_{tag}"]
+        print(f"lead-mode collectivity vs Pearson r ({tag}): Spearman rho = {d['spearman_rho']:+.3f}, "
+              f"p = {d['spearman_p']:.3g}; Pearson = {d['pearson_r']:+.3f}, p = {d['pearson_p']:.3g}")
+
+
+def main_all_modes(args, bench):
+    """--n-modes all: run the all-modes configuration into its own files, then
+    regenerate the report from the untouched 14-mode results plus these."""
+    res_all_path = bu.lp(os.path.join(HERE, RESULTS_ALL_FILE))
+    if args.from_results:
+        results = pd.read_csv(res_all_path, dtype={"chain": str})
+    else:
+        results = run_all(bench, args.limit, ALL_MODES_PARAMS)
+    if args.limit:
+        bench = bench[bench.PDB_ID.isin(results.PDB_ID)]
+    results.to_csv(res_all_path, index=False)
+    res14 = pd.read_csv(bu.lp(os.path.join(HERE, RESULTS_FILE)), dtype={"chain": str})
+    ok14 = res14[res14.status == "ok"].reset_index(drop=True)
+    summ14 = build_summ(res14, ok14, ANM_PARAMS, N_KEEP_EFFECTIVE, quality_control(bench, res14))
+    assoc14 = association_table(ok14)
+    groups14, tests14 = group_table(ok14)
+    summ14["group_kruskal_p"] = tests14
+    ctx = load_all_modes_ctx(bench, ok14, assoc14)
+    with open(bu.lp(os.path.join(HERE, SUMMARY_ALL_FILE)), "w") as fh:
+        json.dump({"summary": ctx["summ"], "comparison_vs_14_modes": ctx["cmp"]}, fh, indent=2)
+    print(f"\n{ctx['summ']['n_valid']}/{len(results)} analysed successfully in all-modes configuration")
+    if not args.no_report:
+        from write_report import write_report, FIG_CAPTIONS
+        write_report(bench, res14, ok14, summ14, assoc14, groups14, list(FIG_CAPTIONS), ctx)
+    print_comparison(summ14, ctx)
+
+
 # --------------------------------------------------------------------------
 def main():
     ap = argparse.ArgumentParser()
@@ -331,11 +430,16 @@ def main():
     ap.add_argument("--no-report", action="store_true")
     ap.add_argument("--from-results", action="store_true",
                     help="reuse results_100_proteins.csv instead of re-running the ANM")
+    ap.add_argument("--n-modes", choices=["20", "all"], default="20",
+                    help="'20' (default): the 14-kept-mode benchmark. 'all': use every non-zero mode; "
+                         "writes results_100_proteins_all_modes.csv and leaves the 14-mode results untouched")
     args = ap.parse_args()
     np.random.seed(SEED)
 
     bench = pd.read_csv(bu.lp(args.benchmark), dtype={"chain": str})
-    res_path = bu.lp(os.path.join(HERE, "results_100_proteins.csv"))
+    if args.n_modes == "all":
+        return main_all_modes(args, bench)
+    res_path = bu.lp(os.path.join(HERE, RESULTS_FILE))
     if args.from_results:
         results = pd.read_csv(res_path, dtype={"chain": str})
     else:
@@ -349,12 +453,7 @@ def main():
     print(f"\n{len(ok)}/{len(results)} analysed successfully; {len(results) - len(ok)} failed")
     if ok.empty:
         sys.exit("no valid proteins; nothing to summarise")
-    summ = summarize(ok)
-    summ.update(n_attempted=int(len(results)), n_valid=int(len(ok)),
-                anm_params=ANM_PARAMS, n_modes_kept=N_KEEP_EFFECTIVE,
-                weakest=ok.loc[ok.pearson_r.idxmin(), ["PDB_ID", "chain", "protein_name", "pearson_r"]].to_dict(),
-                strongest=ok.loc[ok.pearson_r.idxmax(), ["PDB_ID", "chain", "protein_name", "pearson_r"]].to_dict(),
-                qc=qc)
+    summ = build_summ(results, ok, ANM_PARAMS, N_KEEP_EFFECTIVE, qc)
     assoc = association_table(ok)
     groups, group_tests = group_table(ok)
     summ["group_kruskal_p"] = group_tests
@@ -367,7 +466,8 @@ def main():
     print("figures:", ", ".join(figs))
     if not args.no_report:
         from write_report import write_report
-        write_report(bench, results, ok, summ, assoc, groups, figs)
+        ctx = None if args.limit else load_all_modes_ctx(bench, ok, assoc)
+        write_report(bench, results, ok, summ, assoc, groups, figs, ctx)
     print(json.dumps({k: summ[k] for k in ("n_attempted", "n_valid")}, indent=1))
     print(json.dumps(summ["pearson"], indent=1))
 

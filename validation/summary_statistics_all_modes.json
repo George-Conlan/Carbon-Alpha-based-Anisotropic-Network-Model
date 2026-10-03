@@ -1,0 +1,101 @@
+{
+  "summary": {
+    "pearson": {
+      "N": 99,
+      "mean": 0.4351931061006327,
+      "median": 0.4557574528574166,
+      "sd": 0.22320504770127345,
+      "min": -0.0502704569335126,
+      "max": 0.8545412846175168,
+      "q25": 0.2737520322085386,
+      "q75": 0.5896165043542099,
+      "iqr": 0.31586447214567126,
+      "ci95_mean_low": 0.3917016419076795,
+      "ci95_mean_high": 0.4782457818356063,
+      "ci95_median_low": 0.3987711851592727,
+      "ci95_median_high": 0.5192865413663283
+    },
+    "spearman": {
+      "N": 99,
+      "mean": 0.5351323957159797,
+      "median": 0.5565294298211279,
+      "sd": 0.1812922596978249,
+      "min": -0.1274961108500233,
+      "max": 0.8742435436524196,
+      "q25": 0.45647344796346134,
+      "q75": 0.6590469448817023,
+      "iqr": 0.202573496918241,
+      "ci95_mean_low": 0.4984070595401154,
+      "ci95_mean_high": 0.5706074608802922,
+      "ci95_median_low": 0.5302028341205891,
+      "ci95_median_high": 0.5902907039966027
+    },
+    "pct_pearson_gt_0": 97.97979797979798,
+    "pct_pearson_ge_0.3": 70.70707070707071,
+    "pct_pearson_ge_0.5": 44.44444444444444,
+    "pct_pearson_ge_0.7": 13.131313131313133,
+    "pct_pearson_p_lt_0.05_and_positive": 86.86868686868688,
+    "n_attempted": 100,
+    "n_valid": 99,
+    "anm_params": {
+      "cutoff": 8.0,
+      "gamma": 1.0,
+      "n_modes": "all",
+      "n_keep": null,
+      "tol": 1e-06
+    },
+    "n_modes_kept": null,
+    "weakest": {
+      "PDB_ID": "2P3H",
+      "chain": "A",
+      "protein_name": "Uncharacterized CBS domain-containing protein",
+      "pearson_r": -0.0502704569335126
+    },
+    "strongest": {
+      "PDB_ID": "3ZSU",
+      "chain": "A",
+      "protein_name": "TLL2057 PROTEIN",
+      "pearson_r": 0.8545412846175168
+    },
+    "qc": [
+      "no duplicate PDB-chain pairs",
+      "no duplicate PDB IDs",
+      "all 100 benchmark proteins present in results (failures included)",
+      "no NaN/inf in pearson_r, spearman_rho, lead_mode_collectivity of valid proteins",
+      "6 rigid-body modes removed in all 99 valid proteins; 43 have extra near-zero (floppy-terminus) modes, also excluded and flagged in `warnings`"
+    ],
+    "n_modes_kept_min": 143,
+    "n_modes_kept_median": 576.0,
+    "n_modes_kept_max": 1446
+  },
+  "comparison_vs_14_modes": {
+    "n_paired": 99,
+    "pearson": {
+      "mean_diff": 0.03252444374742708,
+      "median_diff": 0.02663583035672057,
+      "n_all_higher": 93,
+      "n_all_lower": 6,
+      "wilcoxon_p": 6.475570799340683e-16
+    },
+    "spearman": {
+      "mean_diff": 0.02165718414417086,
+      "median_diff": 0.012790760166071058,
+      "n_all_higher": 66,
+      "n_all_lower": 32,
+      "wilcoxon_p": 3.305914487897803e-05
+    },
+    "lead_collectivity_max_abs_diff": 1.336840497589975e-05,
+    "collectivity_14": {
+      "spearman_rho": 0.3375015460729746,
+      "spearman_p": 0.000634863894819544,
+      "pearson_r": 0.28747055636090524,
+      "pearson_p": 0.003912495916604975
+    },
+    "collectivity_all": {
+      "spearman_rho": 0.34259740259740257,
+      "spearman_p": 0.0005181783724532098,
+      "pearson_r": 0.2929822372153903,
+      "pearson_p": 0.003250667782714288
+    }
+  }
+}

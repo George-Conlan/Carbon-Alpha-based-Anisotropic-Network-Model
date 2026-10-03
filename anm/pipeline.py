@@ -1,11 +1,11 @@
 import numpy as np
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union
 
 from .structure_io import load_structure, extract_ca_records, records_to_arrays
 from .contact_graph import build_contact_graph, check_connected
 from .hessian import build_hessian
-from .modes import compute_modes, filter_modes
+from .modes import compute_modes, compute_all_modes, filter_modes
 from .analysis import compute_msf, compute_covariance, compute_collectivity
 from .validation import validate
 
@@ -36,7 +36,7 @@ def run_anm_pipeline(
     model_id: int = 0,
     cutoff: float = 8.0,
     gamma: float = 1.0,
-    n_modes: int = 20,
+    n_modes: Union[int, str] = 20,
     n_keep: Optional[int] = None,
     tol: float = 1e-6,
     compute_cov: bool = False,
@@ -57,7 +57,12 @@ def run_anm_pipeline(
 
     H = build_hessian(coords, contacts, gamma)
 
-    if n_keep is None:
+    use_all_modes = isinstance(n_modes, str)
+    if use_all_modes:
+        if n_modes.lower() != "all":
+            raise ValueError(f"n_modes must be an integer or 'all', got {n_modes!r}")
+        # n_keep=None keeps every non-zero mode.
+    elif n_keep is None:
         n_keep = n_modes - 6
 
     # A PDF report includes the correlation heatmap, which needs the
@@ -71,22 +76,27 @@ def run_anm_pipeline(
     # near-zero "mechanism" mode. If that leaves fewer nonzero modes than
     # n_keep requires, ask the eigensolver for more modes and try again,
     # instead of failing on the first attempt.
-    max_possible_modes = 3 * N - 1  # eigsh requires k < matrix dimension
-    current_n_modes = min(n_modes, max_possible_modes)
-    last_error = None
-    for _ in range(5):
-        eigvals, eigvecs = compute_modes(H, current_n_modes)
-        try:
-            kept_vals, kept_vecs, zero_vals, zero_vecs = filter_modes(eigvals, eigvecs, tol, n_keep)
-            last_error = None
-            break
-        except AssertionError as exc:
-            last_error = exc
-            if current_n_modes >= max_possible_modes:
+    if use_all_modes:
+        # The full spectrum can't come from sparse shift-invert; diagonalize densely.
+        eigvals, eigvecs = compute_all_modes(H)
+        kept_vals, kept_vecs, zero_vals, zero_vecs = filter_modes(eigvals, eigvecs, tol, n_keep)
+    else:
+        max_possible_modes = 3 * N - 1  # eigsh requires k < matrix dimension
+        current_n_modes = min(n_modes, max_possible_modes)
+        last_error = None
+        for _ in range(5):
+            eigvals, eigvecs = compute_modes(H, current_n_modes)
+            try:
+                kept_vals, kept_vecs, zero_vals, zero_vecs = filter_modes(eigvals, eigvecs, tol, n_keep)
+                last_error = None
                 break
-            current_n_modes = min(current_n_modes + 10, max_possible_modes)
-    if last_error is not None:
-        raise last_error
+            except AssertionError as exc:
+                last_error = exc
+                if current_n_modes >= max_possible_modes:
+                    break
+                current_n_modes = min(current_n_modes + 10, max_possible_modes)
+        if last_error is not None:
+            raise last_error
 
     msf = compute_msf(kept_vals, kept_vecs, N)
     collectivity = compute_collectivity(kept_vecs, N)

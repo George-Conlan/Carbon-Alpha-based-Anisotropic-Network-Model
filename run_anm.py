@@ -32,6 +32,16 @@ def _stat(res):
     return res[0]
 
 
+def _n_modes(value):
+    """argparse type: a positive integer, or 'all' for every non-zero mode."""
+    if value.lower() == "all":
+        return "all"
+    try:
+        return int(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"invalid n-modes value: {value!r} (expected an integer or 'all')")
+
+
 def resolve_structure_path(target, download_dir):
     if os.path.isfile(target):
         return target
@@ -71,7 +81,7 @@ def main():
     parser.add_argument("--chain", default=None, help="Restrict analysis to a single chain ID.")
     parser.add_argument("--cutoff", type=float, default=8.0, help="Contact cutoff distance in Angstroms (default: 8.0).")
     parser.add_argument("--gamma", type=float, default=1.0, help="Uniform spring constant (default: 1.0).")
-    parser.add_argument("--n-modes", type=int, default=20, help="Number of low-frequency modes to solve for (default: 20).")
+    parser.add_argument("--n-modes", type=_n_modes, default=20, help="Number of low-frequency modes to solve for, or 'all' to use every non-zero mode via dense diagonalization (default: 20).")
     parser.add_argument("--n-keep", type=int, default=None, help="Number of nonzero modes to keep (default: n-modes - 6).")
     parser.add_argument("--tol", type=float, default=1e-6, help="Eigenvalue tolerance for the rigid-body cutoff (default: 1e-6).")
     parser.add_argument("--no-report", action="store_true", help="Skip generating the PDF report.")
