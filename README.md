@@ -104,6 +104,10 @@ pytest
 
 Test coverage exists for `analysis.py`, `hessian.py`, `modes.py`, `structure_io.py`, `contact_graph.py` and `validation.py`, plus the `--n-modes all` option and the MSF/B-factor index alignment through the pipeline. `visualize.py` and `report.py` don't have tests yet. Run `pytest` from the repo root (`pytest.ini` limits collection to `tests/`).
 
+## Acknowledgments
+
+Built with AI assistance from Claude (Anthropic). Claude helped with the design of the method and with deciding what to implement; George Conlan wrote the code.
+
 ## License
 
 MIT — see [LICENSE](LICENSE). Use it, modify it, ship it, just keep the copyright notice.
